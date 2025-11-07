@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.IsNot.not;
+import static org.junit.Assert.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -29,6 +30,10 @@ import org.openqa.selenium.Keys;
 import java.util.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import java.time.Duration;
+
 
 @SpringBootTest
 public class SeleniumTest {
@@ -77,4 +82,78 @@ public class SeleniumTest {
 		 driver.findElement(By.cssSelector("*[data-test=\"login-button\"]")).click();
 
 	}
+	
+	@Test
+	  public void realizarCompra() {
+	    driver.get("https://www.saucedemo.com/");
+	    driver.manage().window().setSize(new Dimension(1552, 832));
+	    
+	    /*Start - Login*/
+	    driver.findElement(By.cssSelector("*[data-test=\"username\"]")).click();
+	    driver.findElement(By.cssSelector("*[data-test=\"username\"]")).sendKeys("standard_user");
+	    driver.findElement(By.cssSelector("*[data-test=\"password\"]")).click();
+	    driver.findElement(By.cssSelector("*[data-test=\"password\"]")).sendKeys("secret_sauce");
+	    driver.findElement(By.cssSelector("*[data-test=\"login-button\"]")).click();
+	    /* End - Login*/
+	    
+	    /*Start - Agregamos productos al carro*/
+	    driver.findElement(By.cssSelector("*[data-test=\"add-to-cart-sauce-labs-fleece-jacket\"]")).click();
+	    driver.findElement(By.cssSelector("*[data-test=\"add-to-cart-sauce-labs-onesie\"]")).click();
+	    /*End - Agregamos productos al carro*/
+	    
+	    /*Start - Compra*/
+	    driver.findElement(By.cssSelector("*[data-test=\"shopping-cart-link\"]")).click();
+	    driver.findElement(By.cssSelector("*[data-test=\"checkout\"]")).click();
+	    
+	    /*Ingreso de datos de la compra*/
+	    driver.findElement(By.cssSelector("*[data-test=\"firstName\"]")).click();
+	    driver.findElement(By.cssSelector("*[data-test=\"firstName\"]")).sendKeys("Armando");
+	    driver.findElement(By.cssSelector("*[data-test=\"lastName\"]")).click();
+	    driver.findElement(By.cssSelector("*[data-test=\"lastName\"]")).sendKeys("Paredes");
+	    driver.findElement(By.cssSelector("*[data-test=\"postalCode\"]")).click();
+	    driver.findElement(By.cssSelector("*[data-test=\"postalCode\"]")).sendKeys("1234");
+	    driver.findElement(By.cssSelector("*[data-test=\"continue\"]")).click();
+	    driver.findElement(By.cssSelector("*[data-test=\"finish\"]")).click();
+	    /*End - Compra*/
+	    
+	    driver.findElement(By.cssSelector("*[data-test=\"back-to-products\"]")).click();
+
+	  }
+	
+	@Test
+	  public void verificarPrecioProductos() {
+	    driver.get("https://www.saucedemo.com/");
+	    driver.manage().window().setSize(new Dimension(1552, 832));
+	    
+	    /*Start - Login*/
+	    driver.findElement(By.cssSelector("*[data-test=\"username\"]")).click();
+	    driver.findElement(By.cssSelector("*[data-test=\"username\"]")).sendKeys("standard_user");
+	    driver.findElement(By.cssSelector("*[data-test=\"password\"]")).click();
+	    driver.findElement(By.cssSelector("*[data-test=\"password\"]")).sendKeys("secret_sauce");
+	    driver.findElement(By.cssSelector("*[data-test=\"login-button\"]")).click();
+	    /* End - Login*/
+	    
+	    /*Start - Validacion de precios*/
+	    driver.findElement(By.cssSelector("#item_2_title_link > .inventory_item_name")).click();
+	    assertThat(driver.findElement(By.cssSelector("*[data-test=\"inventory-item-price\"]")).getText(), is("$7.99"));
+	    driver.findElement(By.cssSelector("*[data-test=\"back-to-products\"]")).click();
+	    driver.findElement(By.cssSelector("*[data-test=\"inventory-item-name\"]")).click();
+	    assertThat(driver.findElement(By.cssSelector("*[data-test=\"inventory-item-price\"]")).getText(), is("$29.99"));
+	    driver.findElement(By.cssSelector("*[data-test=\"back-to-products\"]")).click();
+	    driver.findElement(By.cssSelector("#item_0_title_link > .inventory_item_name")).click();
+	    assertThat(driver.findElement(By.cssSelector("*[data-test=\"inventory-item-price\"]")).getText(), is("$9.99"));
+	    driver.findElement(By.cssSelector("*[data-test=\"back-to-products\"]")).click();
+	    driver.findElement(By.cssSelector("#item_1_title_link > .inventory_item_name")).click();
+	    assertThat(driver.findElement(By.cssSelector("*[data-test=\"inventory-item-price\"]")).getText(), is("$15.99"));
+	    driver.findElement(By.cssSelector("*[data-test=\"back-to-products\"]")).click();
+	    driver.findElement(By.cssSelector("#item_5_title_link > .inventory_item_name")).click();
+	    assertThat(driver.findElement(By.cssSelector("*[data-test=\"inventory-item-price\"]")).getText(), is("$49.99"));
+	    driver.findElement(By.cssSelector("*[data-test=\"back-to-products\"]")).click();
+	    driver.findElement(By.cssSelector("#item_3_title_link > .inventory_item_name")).click();
+	    assertThat(driver.findElement(By.cssSelector("*[data-test=\"inventory-item-price\"]")).getText(), is("$15.99"));
+	    /*End - Validacion de precios*/
+	    
+	    driver.findElement(By.cssSelector("*[data-test=\"back-to-products\"]")).click();
+	    
+	  }
 }
